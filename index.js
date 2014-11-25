@@ -15,23 +15,35 @@ var serialPort = new SerialPort(commander.ttyBuf, {
   baudrate: commander.baudrate
 });
 
-console.log(commander.unixSocket);
-
 var socket = http.createServer();
 socket.listen(commander.unixSocket);
 
 serialPort.on('open', function()
 {
+  console.log("opened");
+  
+  var json = "";
+
   serialPort.on('data', function(data) {
-    //socket.parse();
+    if(String(data).indexOf("0000000") === 0)
+    {
+      //var obj = JSON.parse(json);
+      //socket.parse();
 
-    //socket.write();
+      //socket.write();
 
-    //socket.flush(); //end?
-    console.log('data received: ' + data);
+      //socket.flush(); //end?
+      console.log(json);
+      json = "";
+    }
+    else
+    {
+       json += data;
+    }
+    //console.log('data received: ' + data);
   });
   /*
-  serialPort.write("ls\n", function(err, results) {
+  serialPort.write("hello world!\n", function(err, results) {
     console.log('err ' + err);
     console.log('results ' + results);
   });
