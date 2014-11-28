@@ -15,7 +15,7 @@ var serialPort = new SerialPort(commander.ttyBuf, {
   baudrate: commander.baudrate
 });
 
-var socket = net.createConnection(commander.unixSocket, function()
+var socket = net.connect({ path: commander.unixSocket}, function()
 {
   serialPort.on('open', function()
   {
