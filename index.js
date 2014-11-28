@@ -27,13 +27,13 @@ serialPort.on('open', function()
   serialPort.on('data', function(data) {
     if(String(data).indexOf("0000000") === 0)
     {
-      //var obj = JSON.parse(json);
-      //socket.parse();
-
-      //socket.write();
-
-      //socket.flush(); //end?
+      //write the json from arduino to the socket
+      socket.write(json);
+      
+      //also log for the user
       console.log(json);
+      
+      //reset the json variable
       json = "";
     }
     else
