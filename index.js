@@ -15,37 +15,31 @@ var serialPort = new SerialPort(commander.ttyBuf, {
   baudrate: commander.baudrate
 });
 
-var socket = http.createServer();
-socket.listen(commander.unixSocket);
-
-serialPort.on('open', function()
+var socket = http.createConnection(commander.unixSocket, function()
 {
-  console.log("opened");
+  serialPort.on('open', function()
+  {
+    console.log("opened");
+    
+    var json = "";
   
-  var json = "";
-
-  serialPort.on('data', function(data) {
-    if(String(data).indexOf("0000000") === 0)
-    {
-      //write the json from arduino to the socket
-      socket.write(json);
-      
-      //also log for the user
-      console.log(json);
-      
-      //reset the json variable
-      json = "";
-    }
-    else
-    {
-       json += data;
-    }
-    //console.log('data received: ' + data);
+    serialPort.on('data', function(data) {
+      if(String(data).indexOf("0000000") === 0)
+      {
+        //write the json from arduino to the socket
+        socket.write(json);
+        
+        //also log for the user
+        console.log(json);
+        
+        //reset the json variable
+        json = "";
+      }
+      else
+      {
+         json += data;
+      }
+      //console.log('data received: ' + data);
+    });
   });
-  /*
-  serialPort.write("hello world!\n", function(err, results) {
-    console.log('err ' + err);
-    console.log('results ' + results);
-  });
-  */
 });
